@@ -2,36 +2,61 @@ import React from 'react';
 
 import './styles.css';
 import whatsappIcon from '../../assets/images/icons/whatsapp.svg';
+import api from '../../services/api';
 
-function TeacherItem() {
+export interface Teacher {
+    id: number;
+    subject: string;
+    cost: number;
+    name: string;
+    avatar: string;
+    whatsapp: string;
+    bio: string;
+};
+
+interface TeacherItemProps {
+    teacher: Teacher
+}
+
+const TeacherItem: React.FC<TeacherItemProps> = ({ teacher }) => {
+    function createNewConnection() {
+        api.post('connections', {
+            user_id: teacher.id
+        })
+    }
+
     return (
         <article className="teacher-item">
 
             <header>
                 <img
-                    src="https://avatars1.githubusercontent.com/u/48814528?s=460&u=32efe9b8dfc7fe0fd7d74f4b1dc997f8f8b69537&v=4"
-                    alt="Fernanda Marcilio" />
+                    src={teacher.avatar}
+                    alt={teacher.name} 
+                />
                 <div>
-                    <strong>Fernanda Marcilio</strong>
-                    <span>Artes</span>
+                    <strong>{teacher.name}</strong>
+                    <span>{teacher.subject}</span>
                 </div>
             </header>
 
             <p>
-                Entusiasta das variadas técnicas de desenho. <br />
-                Apaixonada por dar vida ao desenho através de várias técnicas digitais e manuais. Mais de 1.000 alunos aprenderam essa incrivel habilidade.
+                {teacher.bio}
             </p>
 
             <footer>
                 <p>
                     Preço/hora
-                    <strong>R$ 80,00</strong>
+                    <strong>R$ {teacher.cost}</strong>
                 </p>
 
-                <button>
+                <a 
+                    target="_black"
+                    href={`https://wa.me/${teacher.whatsapp}`} 
+                    onClick={createNewConnection}
+                >
                     <img src={whatsappIcon} alt="whatsapp icon" />
                     Entrar em contato
-                </button>
+                </a>
             </footer>
 
         </article>
